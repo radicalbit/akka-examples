@@ -4,10 +4,12 @@ import akka.actor.Actor.Receive
 import akka.actor._
 import io.radicalbit.akkarecipes.messages.MakePizza
 
-class PizzaMaker extends Actor {
+class PizzaMaker extends Actor with ActorLogging{
+
   override def receive: Receive = {
-    case MakePizza(number, timestamp) => {
-      println(s"Received an order of $number pizza at $timestamp")
+    case MakePizza(number) => {
+      log.info("Received order #{}", number)
     }
   }
+
 }

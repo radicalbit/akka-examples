@@ -2,28 +2,22 @@ package io.radicalbit.akkarecipes.actors
 
 import java.util.Date
 
-import akka.actor.{Actor, ActorRef}
-import io.radicalbit.akkarecipes.messages.{MakePizza, Order}
+import akka.actor.{ActorLogging, Actor, ActorRef}
+import io.radicalbit.akkarecipes.messages.{MakePizza, IssueAnOrder}
 
 import scala.concurrent.duration._
 
 
+class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with ActorLogging {
 
-class Customer(pizzaMaker: ActorRef) extends Actor {
-
-  implicit val dispatcher = context.dispatcher
-
-  val tick =
-    context.system.scheduler.schedule(1000 millis, 2000 millis, self, Order)
-
-  var number = 0;
-
-  override def postStop() = tick.cancel()
+  var orderNumber = 0
+  val name = customerName
 
   override def receive: Receive = {
-    case Order => {
-      pizzaMaker ! MakePizza(number % 10 + 1, new Date)
-      number += 1
+    case IssueAnOrder => {
+      orderNumber += 1
+      log.info("{} is sending orderNumber #{}", customerName, orderNumber)
+      pizzaMaker ! MakePizza(orderNumber)
     }
   }
 }
