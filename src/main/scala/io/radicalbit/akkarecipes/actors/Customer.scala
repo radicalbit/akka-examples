@@ -1,6 +1,9 @@
 package io.radicalbit.akkarecipes.actors
 
-import java.util.Date
+import akka.actor.{Actor, ActorLogging, ActorRef}
+import akka.pattern.{ask, pipe}
+import akka.util.Timeout
+import io.radicalbit.akkarecipes.messages.{IssueAnOrder, MakePizza}
 
 import akka.actor.{ ActorLogging, Actor, ActorRef }
 import io.radicalbit.akkarecipes.messages.{ MakePizza, IssueAnOrder }
@@ -12,11 +15,15 @@ class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with Ac
   var orderNumber = 0
   val name = customerName
 
+  implicit val timeout: akka.util.Timeout = Timeout(5 seconds)
+  implicit val executionContext = scala.concurrent.ExecutionContext.global
+
   override def receive: Receive = {
     case IssueAnOrder => {
       orderNumber += 1
       log.info("{} is sending orderNumber #{}", customerName, orderNumber)
-      pizzaMaker ! MakePizza(orderNumber)
+      val result = pizzaMaker ? MakePizza(orderNumber)
+      result pipeTo self
     }
   }
 }
