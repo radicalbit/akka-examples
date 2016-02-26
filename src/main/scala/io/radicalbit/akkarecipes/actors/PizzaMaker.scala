@@ -1,9 +1,7 @@
 package io.radicalbit.akkarecipes.actors
 
-import akka.actor.Actor.Receive
 import akka.actor._
-import io.radicalbit.akkarecipes.messages.MakePizza
-import io.radicalbit.akkarecipes.messages.{ MakePizza, Pizza }
+import io.radicalbit.akkarecipes.messages.{MakePizza, Pizza}
 
 class PizzaMaker extends Actor with ActorLogging {
 
