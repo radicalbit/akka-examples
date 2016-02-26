@@ -1,12 +1,12 @@
 package io.radicalbit.akkarecipes
 
-import akka.actor.{Props, ActorSystem}
+import akka.actor.{ Props, ActorSystem }
 import com.typesafe.config.ConfigFactory
-import io.radicalbit.akkarecipes.actors.{Customer, PizzaMaker}
+import io.radicalbit.akkarecipes.actors.{ Customer, PizzaMaker }
 import io.radicalbit.akkarecipes.messages.IssueAnOrder
 import scala.concurrent.duration._
 
-import scala.concurrent.{ExecutionContextExecutor, Await}
+import scala.concurrent.{ ExecutionContextExecutor, Await }
 
 object SimplePizzaRestaurant {
 

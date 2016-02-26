@@ -1,3 +1,5 @@
+import com.typesafe.sbt.SbtScalariform._
+
 organization := "io.radicalbit"
 
 name := """akka-recipes"""
@@ -10,5 +12,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.4.0"
 )
 
+scalariformSettings
 
 fork in run := true
