@@ -1,9 +1,9 @@
 package io.radicalbit.akkarecipes.actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef}
-import akka.pattern.{ask, pipe}
+import akka.actor.{ Actor, ActorLogging, ActorRef }
+import akka.pattern.{ ask, pipe }
 import akka.util.Timeout
-import io.radicalbit.akkarecipes.messages.{IssueAnOrder, MakePizza}
+import io.radicalbit.akkarecipes.messages.{ IssueAnOrder, MakePizza }
 
 import akka.actor.{ ActorLogging, Actor, ActorRef }
 import io.radicalbit.akkarecipes.messages.{ MakePizza, IssueAnOrder }
