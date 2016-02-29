@@ -1,12 +1,13 @@
 package io.radicalbit.akkarecipes
 
-import akka.actor.{ Props, ActorSystem }
+import akka.actor.{ ActorRef, Props, ActorSystem }
+import akka.routing.{ BalancingPool, RoundRobinPool }
 import com.typesafe.config.ConfigFactory
 import io.radicalbit.akkarecipes.actors.{ Customer, PizzaMaker }
 import io.radicalbit.akkarecipes.messages.IssueAnOrder
 import scala.concurrent.duration._
 
-import scala.concurrent.{ ExecutionContextExecutor, Await }
+import scala.concurrent.{ ExecutionContext, ExecutionContextExecutor, Await }
 
 object SimplePizzaRestaurant {
 
@@ -16,7 +17,8 @@ object SimplePizzaRestaurant {
 
     val system = ActorSystem("SimplePizzaRestaurant", config)
 
-    val pizzaMaker = system.actorOf(Props[PizzaMaker], "PizzaMaker")
+    val pizzaMaker: ActorRef =
+      system.actorOf(RoundRobinPool(5).props(Props[PizzaMaker]).withDispatcher("kitchenDispatcher"), "PizzaMaker")
 
     val customerName = config.getString("pizzarestaurant.people.customerName")
     val customer = system.actorOf(Props[Customer](new Customer(pizzaMaker, customerName)), "Customer")

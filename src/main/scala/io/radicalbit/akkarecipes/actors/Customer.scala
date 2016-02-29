@@ -1,9 +1,10 @@
 package io.radicalbit.akkarecipes.actors
 
-import akka.actor.{Actor, ActorLogging, ActorRef}
-import akka.pattern.{ask, pipe}
+import akka.actor.Status.Failure
+import akka.actor.{ Actor, ActorLogging, ActorRef }
+import akka.pattern.{ ask, pipe }
 import akka.util.Timeout
-import io.radicalbit.akkarecipes.messages.{IssueAnOrder, MakePizza}
+import io.radicalbit.akkarecipes.messages.{ Pizza, IssueAnOrder, MakePizza }
 
 import scala.concurrent.duration._
 
@@ -21,6 +22,12 @@ class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with Ac
       log.info("{} is sending orderNumber #{}", customerName, orderNumber)
       val result = pizzaMaker ? MakePizza(orderNumber)
       result pipeTo self
+    }
+    case p @ Pizza(n) => {
+      log.info("Eating {}", p)
+    }
+    case Failure(e) => {
+      log.error("{}", e)
     }
   }
 }
