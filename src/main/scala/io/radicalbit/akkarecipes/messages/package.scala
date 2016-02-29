@@ -8,4 +8,8 @@ package object messages {
 
   case class Pizza(number: Int)
 
+  case object HowMuch
+
+  case class YouOweMe(total: Int)
+
 }

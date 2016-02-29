@@ -4,7 +4,7 @@ import akka.actor.Status.Failure
 import akka.actor.{ Actor, ActorLogging, ActorRef }
 import akka.pattern.{ ask, pipe }
 import akka.util.Timeout
-import io.radicalbit.akkarecipes.messages.{ Pizza, IssueAnOrder, MakePizza }
+import io.radicalbit.akkarecipes.messages.{ HowMuch, Pizza, IssueAnOrder, MakePizza }
 
 import scala.concurrent.duration._
 
@@ -22,6 +22,9 @@ class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with Ac
       log.info("{} is sending orderNumber #{}", customerName, orderNumber)
       val result = pizzaMaker ? MakePizza(orderNumber)
       result pipeTo self
+      if (orderNumber % 3 == 0)
+        pizzaMaker ? HowMuch pipeTo self
+
     }
     case p @ Pizza(n) => {
       log.info("Eating {}", p)
