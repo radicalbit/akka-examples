@@ -16,10 +16,10 @@ object PizzaRestaurantHall {
 
     val system = ActorSystem("SimplePizzaRestaurant", config)
 
-    val pizzaMaker = system.actorOf(Props[PizzaMaker], "remotePizzaMaker")
+    val remotePizzaMaker = system.actorOf(Props[PizzaMaker], "RemotePizzaMaker")
 
     val customerName = config.getString("pizzarestaurant.people.customerName")
-    val customer = system.actorOf(Props[Customer](new Customer(pizzaMaker, customerName)), "Customer")
+    val customer = system.actorOf(Props[Customer](new Customer(remotePizzaMaker, customerName)), "Customer")
 
     implicit val dispatcher: ExecutionContextExecutor = system.dispatcher
 
