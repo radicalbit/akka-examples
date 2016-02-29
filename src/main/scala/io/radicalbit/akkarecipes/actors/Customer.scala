@@ -22,7 +22,7 @@ class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with Ac
       log.info("{} is sending orderNumber #{}", customerName, orderNumber)
       val result = pizzaMaker ? MakePizza(orderNumber)
       result pipeTo self
-      if (orderNumber % 3 == 0)
+      if (orderNumber % 7 == 0)
         pizzaMaker ? HowMuch pipeTo self
 
     }

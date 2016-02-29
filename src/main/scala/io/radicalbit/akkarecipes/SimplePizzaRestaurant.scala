@@ -25,7 +25,7 @@ object SimplePizzaRestaurant {
 
     val tick = system.scheduler.schedule(500 millis, 2000 millis, customer, IssueAnOrder)
 
-    Thread.sleep(30000)
+    Thread.sleep(20000)
 
     tick.cancel()
     Await.ready(system.terminate(), 10 seconds)

@@ -3,7 +3,7 @@ package io.radicalbit.akkarecipes.actors
 import java.util.Date
 
 import akka.actor._
-import akka.persistence.PersistentActor
+import akka.persistence.{ SnapshotOffer, PersistentActor }
 import io.radicalbit.akkarecipes.messages.{ YouOweMe, HowMuch, MakePizza, Pizza }
 
 case class Counter(number: Int)
@@ -22,6 +22,10 @@ class PizzaMaker extends PersistentActor with ActorLogging {
       counter = Counter(counter.number + 1)
       log.info("Recover with event {}", event)
     }
+    case SnapshotOffer(metadata, data: Counter) => {
+      log.info("Snapshot offer with data {}", data)
+      counter = data
+    }
   }
 
   override def receiveCommand: Receive = {
@@ -38,6 +42,8 @@ class PizzaMaker extends PersistentActor with ActorLogging {
       }
     }
     case HowMuch => {
+      saveSnapshot(counter)
+      log.info("Saving snapshot {}", counter)
       val oweMe = YouOweMe(counter.number * euro)
       log.info("Making total.. {}", oweMe)
       sender ! oweMe
