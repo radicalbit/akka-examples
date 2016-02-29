@@ -4,7 +4,7 @@
 
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-53.53X{sourceThread} | %-50.50X{akkaSource} | %msg%n</pattern>
+            <pattern>%-54.54X{sourceThread} | %-58.58X{akkaSource} | %msg%n</pattern>
         </encoder>
     </appender>
 

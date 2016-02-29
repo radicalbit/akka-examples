@@ -8,8 +8,6 @@ object RemoteKitchen {
 
   def main(args: Array[String]) {
     val kitchen = ActorSystem("RemoteKitchen", ConfigFactory.load("RemoteKitchen"))
-
-    val pizzaMaker = kitchen.actorOf(Props[PizzaMaker], "PizzaMaker")
   }
 
 }

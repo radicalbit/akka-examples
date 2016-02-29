@@ -16,12 +16,7 @@ object PizzaRestaurantHall {
 
     val system = ActorSystem("SimplePizzaRestaurant", config)
 
-    val pizzaMakerSelection: ActorSelection =
-      system.actorSelection("akka.tcp://RemoteKitchen@127.0.0.2:4000/user/PizzaMaker")
-
-    implicit val timeout = new Timeout(10 seconds)
-    val eventualActorRef = pizzaMakerSelection.resolveOne()
-    val pizzaMaker = Await.result(eventualActorRef, 10 seconds)
+    val pizzaMaker = system.actorOf(Props[PizzaMaker], "remotePizzaMaker")
 
     val customerName = config.getString("pizzarestaurant.people.customerName")
     val customer = system.actorOf(Props[Customer](new Customer(pizzaMaker, customerName)), "Customer")
