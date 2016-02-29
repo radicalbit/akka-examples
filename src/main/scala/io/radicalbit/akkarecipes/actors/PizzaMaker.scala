@@ -18,14 +18,17 @@ class PizzaMaker extends PersistentActor with ActorLogging {
   override def persistenceId: String = "PizzaMaker1"
 
   override def receiveRecover: Receive = {
-    case MakePizzaEvent(pizzaOrder, time) => {
+    case event @ MakePizzaEvent(pizzaOrder, time) => {
       counter = Counter(counter.number + 1)
+      log.info("Recover with event {}", event)
     }
   }
 
   override def receiveCommand: Receive = {
     case MakePizza(number) => {
-      persist(MakePizzaEvent(number, new Date)) { (event: MakePizzaEvent) =>
+      val makePizzaEvent = MakePizzaEvent(number, new Date)
+      persist(makePizzaEvent) { (event: MakePizzaEvent) =>
+        log.info("Saved event {}", makePizzaEvent)
         log.info("Received order #{}", number)
         Thread.sleep(500)
         val p = Pizza(number)
