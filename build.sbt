@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtScalariform._
 
 organization := "io.radicalbit"
 
-name := """akka-recipes"""
+name := """akka-examples"""
 
 version := "0.1.0-SNAPSHOT"
 
