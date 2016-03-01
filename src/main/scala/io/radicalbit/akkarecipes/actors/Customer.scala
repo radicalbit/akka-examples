@@ -6,6 +6,7 @@ import akka.pattern.{ ask, pipe }
 import akka.util.Timeout
 import io.radicalbit.akkarecipes.messages.{ Pizza, IssueAnOrder, MakePizza }
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with ActorLogging {
@@ -20,7 +21,7 @@ class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with Ac
     case IssueAnOrder => {
       orderNumber += 1
       log.info("{} is sending orderNumber #{}", customerName, orderNumber)
-      val result = pizzaMaker ? MakePizza(orderNumber)
+      val result: Future[Any] = pizzaMaker ? MakePizza(orderNumber)
       result pipeTo self
     }
     case p @ Pizza(n) => {
