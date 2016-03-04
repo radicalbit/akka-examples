@@ -18,7 +18,7 @@ object SimplePizzaRestaurant {
     val system = ActorSystem("SimplePizzaRestaurant", config)
 
     val pizzaMaker: ActorRef =
-      system.actorOf(RoundRobinPool(5).props(Props[PizzaMaker]).withDispatcher("kitchenDispatcher"), "PizzaMaker")
+      system.actorOf(RoundRobinPool(5).props(Props[PizzaMaker]) /* .withDispatcher("kitchenDispatcher")*/ , "PizzaMaker")
 
     val customerName = config.getString("pizzarestaurant.people.customerName")
     val customer = system.actorOf(Props[Customer](new Customer(pizzaMaker, customerName)), "Customer")
