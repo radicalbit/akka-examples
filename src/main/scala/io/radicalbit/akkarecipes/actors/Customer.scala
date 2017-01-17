@@ -14,7 +14,7 @@ class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with Ac
   val name = customerName
 
   implicit val timeout: akka.util.Timeout = Timeout(5 seconds)
-  implicit val executionContext = scala.concurrent.ExecutionContext.global
+  implicit val executionContext = context.system.dispatcher
 
   override def receive: Receive = {
     case IssueAnOrder => {
@@ -22,9 +22,10 @@ class Customer(pizzaMaker: ActorRef, customerName: String) extends Actor with Ac
       log.info("{} is sending orderNumber #{}", customerName, orderNumber)
       val result = pizzaMaker ? MakePizza(orderNumber)
       result pipeTo self
-      if (orderNumber % 3 == 0)
+      if (orderNumber % 3 == 0) {
+        log.info("*** {} asks for bill ***", customerName)
         pizzaMaker ? HowMuch pipeTo self
-
+      }
     }
     case p @ Pizza(n) => {
       log.info("Eating {}", p)

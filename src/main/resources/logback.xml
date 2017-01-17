@@ -4,7 +4,7 @@
 
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-50.50X{akkaSource} | %msg%n</pattern>
+            <pattern>%-10.10replace(%X{akkaSource}){'akka://SimplePizzaRestaurant/user/',''} | %msg%n</pattern>
         </encoder>
     </appender>
 
