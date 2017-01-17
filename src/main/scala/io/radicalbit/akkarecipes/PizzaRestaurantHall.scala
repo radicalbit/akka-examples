@@ -1,12 +1,13 @@
 package io.radicalbit.akkarecipes
 
-import akka.actor.{ ActorSelection, Props, ActorSystem }
+import akka.actor.{ActorRef, ActorSelection, ActorSystem, Props}
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
-import io.radicalbit.akkarecipes.actors.{ Customer, PizzaMaker }
+import io.radicalbit.akkarecipes.actors.Customer
 import io.radicalbit.akkarecipes.messages.IssueAnOrder
-import scala.concurrent.{ Await, ExecutionContextExecutor }
+
 import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 
 object PizzaRestaurantHall {
 
@@ -20,8 +21,8 @@ object PizzaRestaurantHall {
       system.actorSelection("akka.tcp://RemoteKitchen@127.0.0.2:4000/user/PizzaMaker")
 
     implicit val timeout = new Timeout(10 seconds)
-    val eventualActorRef = pizzaMakerSelection.resolveOne()
-    val pizzaMaker = Await.result(eventualActorRef, 10 seconds)
+    val eventualActorRef: Future[ActorRef] = pizzaMakerSelection.resolveOne()
+    val pizzaMaker: ActorRef = Await.result(eventualActorRef, 10 seconds)
 
     val customerName = config.getString("pizzarestaurant.people.customerName")
     val customer = system.actorOf(Props[Customer](new Customer(pizzaMaker, customerName)), "Customer")
