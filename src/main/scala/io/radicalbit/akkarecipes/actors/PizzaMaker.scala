@@ -9,6 +9,10 @@ class PizzaMaker extends Actor with ActorLogging {
     case MakePizza(number) => {
       log.info("Received order #{}", number)
       Thread.sleep(5000)
+
+      // if (number / 3 == 0)
+      //  self ! PoisonPill
+
       val p = Pizza(number)
       sender ! p
       log.info("{} is ready", p)
