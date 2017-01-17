@@ -8,7 +8,7 @@ import io.radicalbit.akkarecipes.messages.{ YouOweMe, HowMuch, MakePizza, Pizza 
 
 case class Counter(number: Int)
 
-case class MakePizzaEvent(pizzaOrder: Int, time: Date)
+case class PizzaMadeEvent(pizzaOrder: Int, time: Date)
 
 class PizzaMaker extends PersistentActor with ActorLogging {
 
@@ -18,7 +18,7 @@ class PizzaMaker extends PersistentActor with ActorLogging {
   override def persistenceId: String = "PizzaMaker1"
 
   override def receiveRecover: Receive = {
-    case event @ MakePizzaEvent(pizzaOrder, time) => {
+    case event @ PizzaMadeEvent(pizzaOrder, time) => {
       counter = Counter(counter.number + 1)
       log.info("Recover with event {}", event)
     }
@@ -30,9 +30,9 @@ class PizzaMaker extends PersistentActor with ActorLogging {
 
   override def receiveCommand: Receive = {
     case MakePizza(number) => {
-      val makePizzaEvent = MakePizzaEvent(number, new Date)
-      persist(makePizzaEvent) { (event: MakePizzaEvent) =>
-        log.info("Saved event {}", makePizzaEvent)
+      val pizzaMade = PizzaMadeEvent(number, new Date)
+      persist(pizzaMade) { (event: PizzaMadeEvent) =>
+        log.info("Saved event {}", event)
         log.info("Received order #{}", number)
         Thread.sleep(500)
         val p = Pizza(number)
